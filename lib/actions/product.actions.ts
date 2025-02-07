@@ -9,7 +9,6 @@ export async function getLatestProducts() {
             createdAt: 'desc',
         },
     })
-    console.log(typeof data[0].rating, 'data')
 
     return prismaToJs(data)
 }
