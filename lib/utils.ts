@@ -10,7 +10,7 @@ export function prismaToJs<T>(obj: T): T {
     return JSON.parse(JSON.stringify(obj))
 }
 
-// Format number and decimal places
+// Format number and decimal places here
 export function formatNumberWithDecimal(num: number): string {
     const [int, decimal] = num.toString().split('.')
     return decimal ? `${int}.${decimal.padEnd(2, '0')}` : `${int}.00`
