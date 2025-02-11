@@ -22,11 +22,6 @@ const Menu = () => {
                     </Link>
                 </Button>
                 <UserButton />
-                {/* <Button asChild>
-                    <Link href="/sign-in">
-                        <UserIcon /> Sign in
-                    </Link>
-                </Button> */}
             </nav>
             <nav className="md:hidden">
                 <Sheet>
@@ -42,11 +37,6 @@ const Menu = () => {
                             </Link>
                         </Button>
                         <UserButton />
-                        {/* <Button asChild>
-                            <Link href="/sign-in">
-                                <UserIcon /> Sign in
-                            </Link>
-                        </Button> */}
                         <SheetDescription></SheetDescription>
                     </SheetContent>
                 </Sheet>

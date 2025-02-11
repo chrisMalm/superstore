@@ -1,7 +1,8 @@
+import Link from 'next/link'
 import { auth } from '@/auth'
+import { signOutUser } from '@/lib/actions/user.actions'
 import { Button } from '@/components/ui/button'
 import { UserIcon } from 'lucide-react'
-import Link from 'next/link'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,7 +10,6 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { signOutUser } from '@/lib/actions/user.actions'
 
 const UserButton = async () => {
     const session = await auth()
@@ -23,12 +23,12 @@ const UserButton = async () => {
             </Button>
         )
     }
-    const firstInitial = session.user?.name?.charAt(0).toUpperCase() ?? ''
+    const firstInitial = session.user?.name?.charAt(0).toUpperCase() ?? 'U'
 
     return (
         <div className="flex gap-2 items-center">
             <DropdownMenu>
-                <DropdownMenuTrigger>
+                <DropdownMenuTrigger asChild>
                     <div className="flex items-center">
                         <Button
                             variant="ghost"
