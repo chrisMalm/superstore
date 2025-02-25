@@ -3,31 +3,33 @@ import { Inter } from 'next/font/google'
 import '@/assets/styles/globals.css'
 import { APP_DESC, APP_NAME } from '@/lib/constants'
 import { ThemeProvider } from 'next-themes'
+import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-    title: { template: `%s | superstore`, default: APP_NAME },
-    description: APP_DESC,
+  title: { template: `%s | superstore`, default: APP_NAME },
+  description: APP_DESC,
 }
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode
+  children: React.ReactNode
 }>) {
-    return (
-        <html lang="en" suppressHydrationWarning>
-            <body className={`${inter.className} antialiased`}>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="light"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    {children}
-                </ThemeProvider>
-            </body>
-        </html>
-    )
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
+      </body>
+    </html>
+  )
 }
