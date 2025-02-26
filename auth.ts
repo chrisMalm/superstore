@@ -76,27 +76,6 @@ export const config = {
       return token
     },
     ...authConfig.callbacks,
-    // authorized({ request, auth }: any) {
-    //   // check for session cart cookie
-    //   if (!request.cookies.get('sessionCartId')) {
-    //     // generate new session cart id cookie
-    //     const sessionCartId = crypto.randomUUID()
-    //     // clone the request headers
-    //     const newReguestHeaders = new Headers(request.headers)
-
-    //     // create new response and add the new headers
-    //     const response = NextResponse.next({
-    //       request: {
-    //         headers: newReguestHeaders,
-    //       },
-    //     })
-    //     //  set newly generated sessionCart Id in the response cookies
-    //     response.cookies.set('sessionCartId', sessionCartId)
-    //     return response
-    //   } else {
-    //     return true
-    //   }
-    // },
   },
 }
 export const { handlers, auth, signIn, signOut } = NextAuth(config)

@@ -2,10 +2,10 @@
 
 import { ShippingAdress } from '@/types'
 import { useTransition } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ControllerRenderProps, useForm } from 'react-hook-form'
+import { ControllerRenderProps, SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { shippingAdressSchema } from '@/lib/validators'
 import { shippingAdressDefaultValues } from '@/lib/constants'
@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,9 +20,10 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { ArrowRight, Loader } from 'lucide-react'
+import { updateUserAddress } from '@/lib/actions/user.actions'
 
 const ShippingAdressForm = ({ address }: { address: ShippingAdress }) => {
-  //   const router = useRouter()
+  const router = useRouter()
   const { toast } = useToast()
   const [isPending, startTransition] = useTransition()
 
@@ -32,10 +32,20 @@ const ShippingAdressForm = ({ address }: { address: ShippingAdress }) => {
     defaultValues: address || shippingAdressDefaultValues,
   })
 
-  function onSubmit(values: z.infer<typeof shippingAdressSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  const onSubmit: SubmitHandler<z.infer<typeof shippingAdressSchema>> = async (
+    values
+  ) => {
+    startTransition(async () => {
+      const res = await updateUserAddress(values)
+      if (!res.success) {
+        toast({
+          variant: 'destructive',
+          description: res.message,
+        })
+        return
+      }
+      router.push('/payment-method')
+    })
   }
   return (
     <div className="max-w-md mx-auto space-y-4">
