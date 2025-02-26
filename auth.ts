@@ -3,9 +3,8 @@ import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from '@/db/prisma'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { compareSync } from 'bcrypt-ts-edge'
-// import type { NextAuthConfig } from 'next-auth'
-// import { NextResponse } from 'next/server'
 import { authConfig } from './auth.config'
+import { cookies } from 'next/headers'
 
 export const config = {
   pages: { signIn: '/sign-in', error: '/sign-in' },
@@ -60,8 +59,11 @@ export const config = {
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async jwt({ token, user, trigger, session }: any) {
+      // Assign user fields to token
       if (user) {
+        token.id = user.id
         token.role = user.role
+
         // If user has no name then use the email
         if (user.name === 'NO_NAME') {
           token.name = user.email!.split('@')[0]
@@ -72,7 +74,35 @@ export const config = {
             data: { name: token.name },
           })
         }
+        if (trigger === 'signIn' || trigger === 'signUp') {
+          const cookiesObject = await cookies()
+          const sessionCartId = cookiesObject.get('sessionCartId')?.value
+
+          if (sessionCartId) {
+            const sessionCart = await prisma.cart.findFirst({
+              where: { sessionCartId },
+            })
+            if (sessionCart) {
+              // delete the current user cart
+              await prisma.cart.deleteMany({
+                where: { userId: user.id },
+              })
+
+              // Assign new cart
+              await prisma.cart.update({
+                where: { id: sessionCart.id },
+                data: { userId: user.id },
+              })
+            }
+          }
+        }
       }
+
+      // Handle session updates
+      if (session?.user.name && trigger === 'update') {
+        token.name = session.user.name
+      }
+
       return token
     },
     ...authConfig.callbacks,
